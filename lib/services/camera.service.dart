@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:camera/camera.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 
@@ -13,6 +12,7 @@ class CameraService {
   // singleton boilerplate
   CameraService._internal();
 
+  // establishing a connection to the device’s camera
   CameraController _cameraController;
   CameraController get cameraController => this._cameraController;
 
@@ -41,6 +41,7 @@ class CameraService {
     return this._cameraController.initialize();
   }
 
+  //to correctly display an image taken with a camera at a different angle.
   InputImageRotation rotationIntToImageRotation(int rotation) {
     switch (rotation) {
       case 90:
@@ -54,14 +55,14 @@ class CameraService {
     }
   }
 
-  /// takes the picture and saves it in the given path 📸
+  // takes the picture and saves it in the given path
   Future<XFile> takePicture() async {
     XFile file = await _cameraController.takePicture();
     this._imagePath = file.path;
     return file;
   }
 
-  /// returns the image size 📏
+  // returns the image size
   Size getImageSize() {
     return Size(
       _cameraController.value.previewSize.height,

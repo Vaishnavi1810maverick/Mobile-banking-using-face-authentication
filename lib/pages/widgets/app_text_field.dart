@@ -27,7 +27,7 @@ class AppTextField extends StatelessWidget {
         labelText: labelText,
         border: InputBorder.none,
         filled: true,
-        fillColor: Colors.grey[200],
+        fillColor: Colors.white,
         enabledBorder: new OutlineInputBorder(
           borderSide: BorderSide.none,
           borderRadius: const BorderRadius.all(

@@ -36,7 +36,7 @@ class SignInState extends State<SignIn> {
   bool _detectingFaces = false;
   bool pictureTaked = false;
 
-  // switchs when the user press the camera
+  // switch when the user press the camera
   bool _saving = false;
   bool _bottomSheetVisible = false;
 
@@ -47,8 +47,6 @@ class SignInState extends State<SignIn> {
   @override
   void initState() {
     super.initState();
-
-    /// starts the camera & start framing faces
     _start();
   }
 
@@ -59,7 +57,7 @@ class SignInState extends State<SignIn> {
     super.dispose();
   }
 
-  /// starts the camera & start framing faces
+  // starts the camera & start framing faces
   _start() async {
     _initializeControllerFuture =
         _cameraService.startService(widget.cameraDescription);
@@ -72,23 +70,23 @@ class SignInState extends State<SignIn> {
     _frameFaces();
   }
 
-  /// draws rectangles when detects faces
+  // draws rectangles when detects faces
   _frameFaces() {
     imageSize = _cameraService.getImageSize();
 
     _cameraService.cameraController.startImageStream((image) async {
       if (_cameraService.cameraController != null) {
-        // if its currently busy, avoids overprocessing
+        //If faces detected return and set value
         if (_detectingFaces) return;
-
         _detectingFaces = true;
 
         try {
+          //List of faces are given to ML kit and the faces are extracted
           List<Face> faces = await _mlKitService.getFacesFromImage(image);
-
+          //If
           if (faces != null) {
             if (faces.length > 0) {
-              // preprocessing the image
+              // pre process the image
               setState(() {
                 faceDetected = faces[0];
               });
@@ -113,8 +111,9 @@ class SignInState extends State<SignIn> {
     });
   }
 
-  /// handles the button pressed event
+  // when capture button is clicked
   Future<void> onShot() async {
+    //If face is not detected
     if (faceDetected == null) {
       showDialog(
         context: context,
@@ -137,6 +136,7 @@ class SignInState extends State<SignIn> {
       setState(() {
         _bottomSheetVisible = true;
         pictureTaked = true;
+        //give Xfiles path
         imagePath = file.path;
       });
 
@@ -144,10 +144,12 @@ class SignInState extends State<SignIn> {
     }
   }
 
+//When back button is pressed do the above steps
   _onBackPressed() {
     Navigator.of(context).pop();
   }
 
+//reset all the variables
   _reload() {
     setState(() {
       _bottomSheetVisible = false;
@@ -168,6 +170,7 @@ class SignInState extends State<SignIn> {
           FutureBuilder<void>(
               future: _initializeControllerFuture,
               builder: (context, snapshot) {
+                //checking if ConnectionState and future function completed successfully
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (pictureTaked) {
                     return Container(
@@ -200,6 +203,7 @@ class SignInState extends State<SignIn> {
                                 children: <Widget>[
                                   CameraPreview(
                                       _cameraService.cameraController),
+                                  //The face identifying box is present
                                   CustomPaint(
                                     painter: FacePainter(
                                         face: faceDetected,

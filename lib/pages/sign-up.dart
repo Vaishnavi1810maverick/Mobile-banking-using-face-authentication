@@ -43,8 +43,6 @@ class SignUpState extends State<SignUp> {
   @override
   void initState() {
     super.initState();
-
-    /// starts the camera & start framing faces
     _start();
   }
 
@@ -55,7 +53,7 @@ class SignUpState extends State<SignUp> {
     super.dispose();
   }
 
-  /// starts the camera & start framing faces
+  // starts the camera & start framing faces
   _start() async {
     _initializeControllerFuture =
         _cameraService.startService(widget.cameraDescription);
@@ -68,7 +66,7 @@ class SignUpState extends State<SignUp> {
     _frameFaces();
   }
 
-  /// handles the button pressed event
+  // handles the button pressed event
   Future<void> onShot() async {
     if (faceDetected == null) {
       showDialog(
@@ -98,7 +96,7 @@ class SignUpState extends State<SignUp> {
     }
   }
 
-  /// draws rectangles when detects faces
+  // draws rectangles when detects faces
   _frameFaces() {
     imageSize = _cameraService.getImageSize();
 

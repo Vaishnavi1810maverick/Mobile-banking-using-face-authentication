@@ -1,14 +1,17 @@
 import 'dart:io';
-
 import 'package:face_net_authentication/pages/db/database.dart';
 import 'package:face_net_authentication/pages/models/user.model.dart';
+import 'package:face_net_authentication/pages/home_screen.dart';
 import 'package:face_net_authentication/pages/profile.dart';
 import 'package:face_net_authentication/pages/widgets/app_button.dart';
 import 'package:face_net_authentication/services/camera.service.dart';
 import 'package:face_net_authentication/services/facenet.service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../home.dart';
 import 'app_text_field.dart';
+
+String username = "";
 
 class AuthActionButton extends StatefulWidget {
   AuthActionButton(this._initializeControllerFuture,
@@ -51,15 +54,11 @@ class _AuthActionButtonState extends State<AuthActionButton> {
 
   Future _signIn(context) async {
     String password = _passwordTextEditingController.text;
+    username = predictedUser.user;
 
-    if (this.predictedUser.password == password) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => Profile(
-                    this.predictedUser.user,
-                    imagePath: _cameraService.imagePath,
-                  )));
+    if (predictedUser.password == password) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (BuildContext context) => Profile()));
     } else {
       showDialog(
         context: context,
@@ -70,6 +69,18 @@ class _AuthActionButtonState extends State<AuthActionButton> {
         },
       );
     }
+
+    /*FirebaseFirestore.instance
+        .collection('users')
+        .doc()
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        print('Document data: ${documentSnapshot.data()}');
+      } else {
+        print('Document does not exist on the database');
+      }
+    });*/
   }
 
   String _predictUser() {
@@ -91,7 +102,9 @@ class _AuthActionButtonState extends State<AuthActionButton> {
             if (widget.isLogin) {
               var userAndPass = _predictUser();
               if (userAndPass != null) {
-                this.predictedUser = User.fromDB(userAndPass);
+                if (userAndPass != null) {
+                  this.predictedUser = User.fromDB(userAndPass);
+                }
               }
             }
             PersistentBottomSheetController bottomSheetController =
@@ -111,7 +124,6 @@ class _AuthActionButtonState extends State<AuthActionButton> {
           color: Color(0xFF0F0BDB),
           boxShadow: <BoxShadow>[
             BoxShadow(
-              color: Colors.blue.withOpacity(0.1),
               blurRadius: 1,
               offset: Offset(0, 2),
             ),
@@ -126,7 +138,9 @@ class _AuthActionButtonState extends State<AuthActionButton> {
           children: [
             Text(
               'CAPTURE',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
             SizedBox(
               width: 10,
@@ -140,6 +154,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
 
   signSheet(context) {
     return Container(
+      color: Color(0xFFEAF3FA),
       padding: EdgeInsets.all(20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -155,7 +170,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
               : widget.isLogin
                   ? Container(
                       child: Text(
-                      'User not found 😞',
+                      'User not found,in order to Login you must Sign up! ',
                       style: TextStyle(fontSize: 20),
                     ))
                   : Container(),

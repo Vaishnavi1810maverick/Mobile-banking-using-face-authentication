@@ -3,14 +3,14 @@ import 'package:camera/camera.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:flutter/material.dart';
 
+//A singleton is created(one instance of the class is created)
 class MLKitService {
-  // singleton boilerplate
   static final MLKitService _cameraServiceService = MLKitService._internal();
-
+  //returns the cached instance on every future invocation and is not allowed to create a new one.
   factory MLKitService() {
     return _cameraServiceService;
   }
-  // singleton boilerplate
+  // singleton constructor
   MLKitService._internal();
 
   // service injection
@@ -19,6 +19,7 @@ class MLKitService {
   FaceDetector _faceDetector;
   FaceDetector get faceDetector => this._faceDetector;
 
+  //The face that we detect must be accurate,get all the contours and key features of face
   void initialize() {
     this._faceDetector = GoogleMlKit.vision.faceDetector(
       FaceDetectorOptions(
@@ -27,12 +28,15 @@ class MLKitService {
     );
   }
 
+// preprocess the image
   Future<List<Face>> getFacesFromImage(CameraImage image) async {
-    /// preprocess the image  🧑🏻‍🔧
     InputImageData _firebaseImageMetadata = InputImageData(
       imageRotation: _cameraService.cameraRotation,
+      //Need the image in raw format RGBA
       inputImageFormat: InputImageFormatMethods.fromRawValue(image.format.raw),
+
       size: Size(image.width.toDouble(), image.height.toDouble()),
+      //The image
       planeData: image.planes.map(
         (Plane plane) {
           return InputImagePlaneMetadata(
@@ -44,13 +48,13 @@ class MLKitService {
       ).toList(),
     );
 
-    /// Transform the image input for the _faceDetector 🎯
+    // Transform the image input for the faceDetector
     InputImage _firebaseVisionImage = InputImage.fromBytes(
       bytes: image.planes[0].bytes,
       inputImageData: _firebaseImageMetadata,
     );
 
-    /// proces the image and makes inference 🤖
+    // process the image and makes inference
     List<Face> faces =
         await this._faceDetector.processImage(_firebaseVisionImage);
     return faces;
