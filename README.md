@@ -1,6 +1,4 @@
-<div align="center">
-<img src="https://raw.githubusercontent.com/MCarlomagno/FaceRecognitionAuth/master/assets/banner.png" alt="banner image"/>
-</div>
+
 
 # FaceNetAuthentication
 
@@ -32,41 +30,21 @@ If you're interested in contributing, please let me know emailing me to marcosca
 
 1- Clone the project:
 
-```
-git clone https://github.com/MCarlomagno/FaceRecognitionAuth.git
-```
 2- Open the folder:
 
-```
-cd FaceRecognitionAuth
-```
 3- Install dependencies:
 
-```
-flutter pub get
-```
 Run in iOS directory
 ```
 pod install
 ```
 4- Run on device (Check device connected or any virtual device running):
-
 ```
 flutter run
 ```
 
 To run on iOS you need to have a developer account.
 See here https://stackoverflow.com/a/4952845
-
-## Screenshots
-<div align="center">
-<img src="https://raw.githubusercontent.com/MCarlomagno/FaceRecognitionAuth/master/assets/banner.png" alt="banner image"/>
-</div>
-
-## Licence
-
-https://opensource.org/licenses/BSD-3-Clause
-
 
 
 
